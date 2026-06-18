@@ -48,6 +48,10 @@ function lossMoney(value) {
   return value === 0 ? money(0) : money(-Math.abs(value));
 }
 
+function roundLot(value) {
+  return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
 function levelLabel(level) {
   return level > 0 ? `Level ${level}` : "None";
 }
@@ -70,14 +74,14 @@ function buildLevels(settings) {
   let previousRawLoss = 0;
 
   for (let level = 1; level <= settings.maxLevels; level += 1) {
-    const lot = Number((settings.startLot * settings.multiplier ** (level - 1)).toFixed(2));
+    const lot = roundLot(settings.startLot * settings.multiplier ** (level - 1));
     totalLots += lot;
 
     let loss = 0;
     let weightedEntryPips = 0;
 
     for (let openLevel = 1; openLevel <= level; openLevel += 1) {
-      const openLot = Number((settings.startLot * settings.multiplier ** (openLevel - 1)).toFixed(2));
+      const openLot = roundLot(settings.startLot * settings.multiplier ** (openLevel - 1));
       const adversePips =
         openLevel === 1
           ? (level > 1 ? settings.firstStep + Math.max(0, level - 2) * settings.nextStep : 0)
