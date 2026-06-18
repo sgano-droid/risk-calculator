@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gold Grid Risk Calculator</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace" aria-label="Risk calculator">
+        <form class="controls" id="riskForm">
+          <fieldset>
+            <legend>Account</legend>
+            <label>
+              Capital
+              <span class="money-field">
+                <span>$</span>
+                <input id="capital" type="number" min="1" step="1" value="500">
+              </span>
+            </label>
+
+            <label>
+              Account type
+              <select id="accountType">
+                <option value="vantage-cent" selected>Vantage Cent</option>
+                <option value="vantage-standard">Vantage Standard</option>
+              </select>
+            </label>
+
+            <label>
+              Gold pip value per 1.00 lot
+              <span class="money-field">
+                <span>$</span>
+                <input id="pipValue" type="number" min="0.0001" step="0.0001" value="0.01">
+              </span>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Basket Setup</legend>
+            <label>
+              Starting lot
+              <input id="startLot" type="number" min="0.01" step="0.01" value="0.10">
+            </label>
+
+            <label>
+              Lot multiplier
+              <input id="multiplier" type="number" min="1" step="0.01" value="1.55">
+            </label>
+
+            <label>
+              Max basket levels
+              <input id="maxLevels" type="number" min="1" max="30" step="1" value="15">
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Grid Distance</legend>
+            <label>
+              First step distance
+              <span class="unit-field">
+                <input id="firstStep" type="number" min="1" step="1" value="110">
+                <span>pips</span>
+              </span>
+            </label>
+
+            <label>
+              Next step distance
+              <span class="unit-field">
+                <input id="nextStep" type="number" min="1" step="1" value="130">
+                <span>pips</span>
+              </span>
+            </label>
+          </fieldset>
+        </form>
+
+        <div class="results-column">
+          <section class="intro" aria-label="Calculator overview">
+            <div>
+              <p class="eyebrow">Gold EA Basket Risk</p>
+              <h1>Grid survival calculator</h1>
+              <p class="lede">
+                Estimate how many basket levels your capital can survive before drawdown or margin pressure should stop the EA.
+              </p>
+            </div>
+            <div class="status-panel" aria-live="polite">
+              <span class="status-label">Recommended max level</span>
+              <strong id="recommendedLevel">-</strong>
+              <span id="recommendationText">Enter your settings to calculate risk.</span>
+            </div>
+          </section>
+
+          <aside class="summary" aria-label="Risk summary">
+            <div class="metric">
+              <span>Survives to</span>
+              <strong id="surviveLevel">-</strong>
+            </div>
+            <div class="metric">
+              <span>Danger starts</span>
+              <strong id="dangerLevel">-</strong>
+            </div>
+            <div class="advice" id="adviceBox"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Basket Level Table</h2>
+          <p>Estimated floating loss uses your pip value and basket spacing.</p>
+          </div>
+          <span id="lotPreview" class="lot-preview"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Lot / Level</th>
+                <th>Total lots</th>
+                <th>Estimated pips</th>
+                <th>Estimated Loss per level</th>
+                <th>Estimated Floating loss</th>
+                <th>Drawdown</th>
+                <th>Recovery to BE</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="levelTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel two-col">
+        <div>
+          <h2>Capital Survival Table</h2>
+          <p>Shows the highest level that stays under each drawdown limit.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Capital</th>
+                  <th>10% DD</th>
+                  <th>20% DD</th>
+                  <th>30% DD</th>
+                </tr>
+              </thead>
+              <tbody id="capitalTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h2>Risk Notes</h2>
+          <div class="notes" id="notes"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
